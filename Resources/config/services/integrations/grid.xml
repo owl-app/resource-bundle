@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <defaults public="true" />
+
+        <service id="owl.resource.grid.resource_view_factory" class="Owl\Bridge\SyliusResource\Grid\View\ResourceGridViewFactory" decorates="sylius.grid.resource_view_factory" decoration-priority="256">
+            <argument type="service" id="sylius.grid.data_provider" />
+            <argument type="service" id="sylius.resource_controller.parameters_parser" />
+        </service>
+
+        <service id="owl.resource.grid.data_provider" class="Owl\Bridge\SyliusResource\Grid\Data\DataProvider" decorates="sylius.grid.data_provider" decoration-priority="256">
+            <argument type="service" id="sylius.grid.data_source_provider" />
+            <argument type="service" id="sylius.grid.filters_applicator" />
+            <argument type="service" id="sylius.grid.sorter" />
+            <argument type="service" id="owl.resource_controller.filter_applicator" />
+        </service>
+
+        <service id="owl.grid.provider" class="Owl\Bundle\CoreBundle\Grid\SuffixableGridProvider" decorates="sylius.grid.provider" decoration-priority="128">
+            <argument type="service" id="owl.grid.provider.inner" />
+            <argument type="service" id="owl.grid.role_base_grid_name_provider" />
+            <argument>%sylius.grids_definitions%</argument>
+        </service>
+
+        <service id="owl.grid.role_base_grid_name_provider" class="Owl\Bundle\CoreBundle\Provider\RoleBasedSuffixGridProvider">
+            <argument type="service" id="owl.context.admin_user" />
+        </service>
+
+    </services>
+</container>

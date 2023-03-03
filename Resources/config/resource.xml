@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<container xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://symfony.com/schema/dic/services" xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+    <services>
+        <defaults public="true" />
+
+        <service id="owl.resource_controller.resources_resolver" class="Owl\Bridge\SyliusResource\Controller\ResourcesResolver" public="false" decorates="sylius.resource_controller.resources_resolver" decoration-priority="512">
+            <argument type="service" id="owl.resource_controller.resources_resolver.inner" />
+            <argument type="service" id="owl.resource_controller.orm.collection_provider" />
+        </service>
+
+        <service id="owl.resource_controller.view_handler" decorates="sylius.resource_controller.view_handler" class="Owl\Bridge\SyliusResource\Controller\ViewHandler" public="false">
+            <argument type="service" id=".inner"/>
+            <argument type="service" id="fos_rest.view_handler" on-invalid="null" />
+        </service>
+
+        <service id="owl.resource_controller.event_dispatcher" decorates="sylius.resource_controller.event_dispatcher" class="Owl\Bridge\SyliusResource\Controller\EventDispatcher" public="false">
+            <argument type="service" id=".inner"/>
+            <argument type="service" id="event_dispatcher" />
+        </service>
+
+        <service id="Owl\Bridge\SyliusResource\Controller\RequestConfigurationFactory" decorates="sylius.resource_controller.request_configuration_factory" public="false">
+            <argument type="service" id=".inner"/>
+            <argument type="service" id="router" />
+            <argument>Owl\Bridge\SyliusResource\Controller\RequestConfiguration</argument>
+        </service>
+
+        <service id="owl.resource_controller.redirect_handler" decorates="sylius.resource_controller.redirect_handler" class="Owl\Bridge\SyliusResource\Controller\RedirectHandler" public="false">
+            <argument type="service" id="router" />
+        </service>
+
+        <service id="owl.resource_controller.authorization_checker" class="Owl\Component\Core\Authorization\AuthorizationChecker" public="false">
+            <argument type="service" id="security.authorization_checker" />
+        </service>
+
+        <service id="owl.resource_controller.single_resource_provider" class="Owl\Bridge\SyliusResource\Controller\SingleResourceProvider" decorates="sylius.resource_controller.single_resource_provider" public="false">
+            <argument type="service" id="owl.resource_controller.orm.item_provider" />
+        </service>
+
+        <service id="owl.resource_controller.parent_single_resource_provider" class="Owl\Bridge\SyliusResource\Controller\ParentSingleResourceProvider" public="true">
+            <argument type="service" id="sylius.resource_registry" />
+            <argument type="service" id="sylius.registry.resource_repository" />
+            <argument type="service" id="owl.resource_controller.orm.item_provider" />
+        </service>
+    
+        <service id="owl.resource_controller.new_resource_factory" decorates="sylius.resource_controller.new_resource_factory" class="Owl\Bridge\SyliusResource\Controller\NewResourceFactory" public="false" />
+
+        <service id="owl.resource_controller.orm.collection_provider" class="Owl\Bridge\SyliusResource\Doctrine\Orm\CollectionProvider" public="false">
+            <argument type="service" id="owl.resource_controller.filter_applicator" />
+            <argument type="service" id="owl.resource_controller.orm.query_builder_applicator" />
+        </service>
+
+        <service id="owl.resource_controller.orm.item_provider" class="Owl\Bridge\SyliusResource\Doctrine\Orm\ItemProvider" public="false">
+            <argument type="service" id="owl.resource_controller.filter_applicator" />
+            <argument type="service" id="owl.resource_controller.orm.query_builder_applicator" />
+        </service>
+
+        <service id="owl.registry.resource_filter" class="Sylius\Component\Registry\ServiceRegistry">
+            <argument>Owl\Bridge\SyliusResource\Doctrine\Orm\Filter\FilterInterface</argument>
+            <argument>resource filter</argument>
+        </service>
+
+        <service id="owl.resource_controller.filter_applicator" class="Owl\Bridge\SyliusResource\Doctrine\Common\Applicator\ResourceFilterApplicator">
+            <argument type="service" id="owl.registry.resource_filter" />
+        </service>
+
+        <service id="owl.resource_controller.orm.query_builder_applicator" class="Owl\Bridge\SyliusResource\Doctrine\Orm\QueryBuilderApplicator" public="false" />
+
+    </services>
+</container>
