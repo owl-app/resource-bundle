@@ -33,7 +33,7 @@
             <argument type="service" id="security.authorization_checker" />
         </service>
 
-        <service id="owl.resource_controller.single_resource_provider" class="Owl\Bridge\SyliusResource\Controller\SingleResourceProvider" decorates="sylius.resource_controller.single_resource_provider" public="false">
+        <service id="owl.resource_controller.single_resource_provider" class="Owl\Bridge\SyliusResource\Doctrine\Orm\Resource\SingleResourceProvider" decorates="sylius.resource_controller.single_resource_provider" public="false">
             <argument type="service" id="owl.resource_controller.orm.item_provider" />
         </service>
 
